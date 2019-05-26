@@ -1,4 +1,4 @@
-package br.com.mirandalabs.urlchecker;
+package br.com.mirandalabs.urlchecker.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfig {
-
 
     @Value("${insertion.queue}")
     private String insertionQueue;
