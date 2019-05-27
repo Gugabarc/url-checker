@@ -1,4 +1,4 @@
-package br.com.mirandalabs.urlchecker.whitelist.checker;
+package br.com.mirandalabs.urlchecker.whitelist.checker.url;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +12,9 @@ public class UrlCheckerConsumer {
 	
 	@Autowired
 	private UrlCheckerService urlCheckerService;
+	
+	@Autowired
+	private UrlCheckerProducer urlCheckerProducer;
 
 	/**
 	 * 
@@ -22,7 +25,13 @@ public class UrlCheckerConsumer {
         try {
         	log.info("Received message from queue with content [{}]", urlCheckerRequest);
         	
-        	urlCheckerService.validateUrl(urlCheckerRequest);
+        	UrlCheckerResponse urlCheckerResponse = urlCheckerService.validateUrl(urlCheckerRequest);
+        	
+        	log.info("Response for checking url [{}]: [{}]", urlCheckerRequest, urlCheckerResponse);
+        	
+        	urlCheckerProducer.send(urlCheckerResponse);
+        	
+        	log.info("Finished process for correlationId [{}]", urlCheckerRequest.getCorrelationId());
 
         } catch (Exception e) {
             log.error("An error has been occurred", e);

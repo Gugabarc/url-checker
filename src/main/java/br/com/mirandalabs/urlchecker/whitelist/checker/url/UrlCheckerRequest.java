@@ -1,4 +1,4 @@
-package br.com.mirandalabs.urlchecker.whitelist.checker;
+package br.com.mirandalabs.urlchecker.whitelist.checker.url;
 
 import java.io.Serializable;
 

@@ -1,4 +1,4 @@
-package br.com.mirandalabs.urlchecker.whitelist.checker;
+package br.com.mirandalabs.urlchecker.whitelist.checker.url;
 
 import java.util.List;
 
@@ -38,6 +38,10 @@ public class UrlCheckerService {
 	}
 
 	private UrlCheckerResponse checkUrlInRegexWhitelist(List<RegularExpressionWhitelist> regularExpressionWhitelists, UrlCheckerRequest urlCheckerRequest) {
+		
+		if(CollectionUtils.isEmpty(regularExpressionWhitelists)) {
+			log.info("No regular expression found for [{}]. URL is ok", urlCheckerRequest);
+		}
 
 		for (RegularExpressionWhitelist regularExpressionWhitelist : regularExpressionWhitelists) {
 
@@ -51,9 +55,9 @@ public class UrlCheckerService {
 						.regularExpression(regularExpressionWhitelist.getRegularExpression())
 						.correlationId(urlCheckerRequest.getCorrelationId()).build();
 			}
-
-			log.info("URL doesn't match any regular expression [{}]", urlCheckerRequest);
 		}
+		
+		log.info("URL doesn't match any regular expression [{}]", urlCheckerRequest);
 
 		return UrlCheckerResponse.builder()
 				.match(false)
