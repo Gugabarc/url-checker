@@ -43,7 +43,6 @@ public class RabbitConfig {
         return new Queue(this.insertionQueue, true);
     }
 
-
     @Bean
     public Queue createValidationQueue(){
         return new Queue(this.validationQueue, true);
