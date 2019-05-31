@@ -1,6 +1,7 @@
 package br.com.mirandalabs.urlchecker.whitelist.checker.url.rabbit;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import br.com.mirandalabs.urlchecker.whitelist.checker.url.UrlChecker;
 import br.com.mirandalabs.urlchecker.whitelist.checker.url.UrlCheckerResult;
@@ -12,6 +13,7 @@ public interface UrlCheckerMapper {
 	
 	UrlChecker fromUrlCheckerRequestDTOToUrlChecker(UrlCheckerRequestDTO urlCheckerRequestDTO);
 	
+	@Mapping(source = "rule.rule", target = "rule")
 	UrlCheckerResponseDTO fromUrlCheckerResultToUrlCheckerResponseDTO(UrlCheckerResult urlCheckerResult);
 
 }

@@ -30,7 +30,7 @@ public class UrlWhitelistRuleService implements CrudTemplateService<UrlWhitelist
         	RuleValidatorStrategy ruleValidator = ruleValidatorFactory.getInstance(urlWhitelistRule.getType());
         	
             if (!ruleValidator.isValid(urlWhitelistRule)) { 
-            	log.info("Invalid rule for url whitelist [{}]. Operation aborted", urlWhitelistRule);
+            	log.info("Invalid rule for url whitelist [{}]. Operation aborted.", urlWhitelistRule);
             	return null;
             }
             
@@ -52,6 +52,8 @@ public class UrlWhitelistRuleService implements CrudTemplateService<UrlWhitelist
     }
 	
 	public List<UrlWhitelistRule> findByClient(String client) {
+		log.info("Searching rules by client [{}]", client);
+		
 		if (urlWhitelistRuleRepository.existsByClient(client)) {
 			log.info("Client [{}] found", client);
 			return urlWhitelistRuleRepository.findByClientOrIsGlobal(client, Boolean.TRUE);

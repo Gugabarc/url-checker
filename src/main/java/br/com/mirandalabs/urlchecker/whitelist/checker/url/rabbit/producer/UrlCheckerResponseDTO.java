@@ -2,10 +2,16 @@ package br.com.mirandalabs.urlchecker.whitelist.checker.url.rabbit.producer;
 
 import java.io.Serializable;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Getter @Builder
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@ToString
+@Builder
 public class UrlCheckerResponseDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -15,11 +21,5 @@ public class UrlCheckerResponseDTO implements Serializable {
     private String rule;
 
     private Integer correlationId;
-
-	@Override
-	public String toString() {
-		return "UrlCheckerResponse [match=" + match + ", rule=" + rule + ", "
-				+ "correlationId=" + correlationId + "]";
-	}
 
 }

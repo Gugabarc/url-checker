@@ -3,11 +3,16 @@ package br.com.mirandalabs.urlchecker.whitelist.checker.url;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
-@Getter @Setter @NoArgsConstructor
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@ToString
+@Builder
 public class UrlChecker {
 
 	@NotBlank
@@ -19,9 +24,4 @@ public class UrlChecker {
 	@NotNull
     private Integer correlationId;
 
-	@Override
-	public String toString() {
-		return "UrlCheckerRequest [client=" + client + ", url=" + url + ", correlationId=" + correlationId + "]";
-	}
-	
 }

@@ -31,7 +31,8 @@ public class RegexWhitelistRuleConsumer {
         	urlWhitelistRuleService.save(regexWhitelist);
 
         } catch (Exception e) {
-            log.error("An error has been occurred", e);
+            log.error("An error has been occurred. Aborting operation.", e);
+            throw e;
         }
     }
 }

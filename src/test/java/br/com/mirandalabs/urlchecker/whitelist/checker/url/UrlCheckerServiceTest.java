@@ -15,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import br.com.mirandalabs.urlchecker.whitelist.checker.url.rabbit.consumer.UrlCheckerRequestDTO;
 import br.com.mirandalabs.urlchecker.whitelist.rule.RuleTypeEnum;
 import br.com.mirandalabs.urlchecker.whitelist.rule.UrlWhitelistRule;
 import br.com.mirandalabs.urlchecker.whitelist.rule.UrlWhitelistRuleService;
@@ -63,12 +62,12 @@ public class UrlCheckerServiceTest {
     public void whenRulesIsNull_thenReturnMatchIsFalse(){
     	when(urlWhitelistRuleService.findByClient(anyString())).thenReturn(null);
     	
-    	UrlCheckerRequestDTO urlCheckerRequestDTO = UrlCheckerRequestDTO.builder()
-    																	.client("")
-    																	.correlationId(123)
-    																	.build();
+    	UrlChecker urlChecker = UrlChecker.builder()
+												.client("")
+												.correlationId(123)
+												.build();
     	
-		UrlCheckerResult result = urlCheckerService.validateUrl(urlCheckerRequestDTO);
+		UrlCheckerResult result = urlCheckerService.validateUrl(urlChecker);
 		
 		UrlCheckerResult expected = UrlCheckerResult.builder()
 											.match(false)
@@ -83,12 +82,12 @@ public class UrlCheckerServiceTest {
     public void whenRulesIsEmpty_thenReturnMatchIsFalse(){
     	when(urlWhitelistRuleService.findByClient(anyString())).thenReturn(new ArrayList<>());
     	
-    	UrlCheckerRequestDTO urlCheckerRequestDTO = UrlCheckerRequestDTO.builder()
-    																	.client("")
-    																	.correlationId(123)
-    																	.build();
+    	UrlChecker urlChecker = UrlChecker.builder()
+												.client("")
+												.correlationId(123)
+												.build();
     	
-		UrlCheckerResult result = urlCheckerService.validateUrl(urlCheckerRequestDTO);
+		UrlCheckerResult result = urlCheckerService.validateUrl(urlChecker);
 		
 		UrlCheckerResult expected = UrlCheckerResult.builder()
 											.match(false)
@@ -101,13 +100,13 @@ public class UrlCheckerServiceTest {
     
     @Test
     public void whenRuleMatch_thenReturnMatchIsTrue(){
-    	UrlCheckerRequestDTO urlCheckerRequestDTO = UrlCheckerRequestDTO.builder()
-    																	.client("abc")
-    																	.url("www.miranda.com.br")
-    																	.correlationId(123)
-    																	.build();
+    	UrlChecker urlChecker = UrlChecker.builder()
+													.client("abc")
+													.url("www.miranda.com.br")
+													.correlationId(123)
+													.build();
     	
-		UrlCheckerResult result = urlCheckerService.validateUrl(urlCheckerRequestDTO);
+		UrlCheckerResult result = urlCheckerService.validateUrl(urlChecker);
 		
 		UrlCheckerResult expected = UrlCheckerResult.builder()
 											.match(true)
@@ -122,13 +121,13 @@ public class UrlCheckerServiceTest {
     public void whenRuleDontMatch_thenReturnMatchIsFalse(){
     	when(ruleEvaluatorStrategy.match(anyString(), any(UrlWhitelistRule.class))).thenReturn(false);
     	
-    	UrlCheckerRequestDTO urlCheckerRequestDTO = UrlCheckerRequestDTO.builder()
-    																	.client("abc")
-    																	.url("www.miranda.com.br")
-    																	.correlationId(123)
-    																	.build();
+    	UrlChecker urlChecker = UrlChecker.builder()
+											.client("abc")
+											.url("www.miranda.com.br")
+											.correlationId(123)
+											.build();
     	
-		UrlCheckerResult result = urlCheckerService.validateUrl(urlCheckerRequestDTO);
+		UrlCheckerResult result = urlCheckerService.validateUrl(urlChecker);
 		
 		UrlCheckerResult expected = UrlCheckerResult.builder()
 											.match(false)

@@ -4,7 +4,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.com.mirandalabs.urlchecker.config.RabbitConfig;
@@ -23,7 +22,7 @@ public class UrlCheckerProducer {
 	@Autowired
     private ObjectMapper objectMapper;
 
-    public void send(UrlCheckerResponseDTO urlCheckerResponseDTO){
+    public void send(UrlCheckerResponseDTO urlCheckerResponseDTO) throws Exception{
     	try {
     		String responseAsStringJson = convertToStringJson(urlCheckerResponseDTO);
 
@@ -36,15 +35,16 @@ public class UrlCheckerProducer {
 											, responseAsStringJson);
 		
     	} catch (Exception e) {
-			log.error("Error sending to [{}]", rabbitConfig.getResponseExchange(), e);
+			log.error("Error sending to [{}]. Aborting operation.", rabbitConfig.getResponseExchange(), e);
+			throw e;
 		}
     }
 
-	private String convertToStringJson(UrlCheckerResponseDTO urlCheckerResponseDTO) throws JsonProcessingException {
+	private String convertToStringJson(UrlCheckerResponseDTO urlCheckerResponseDTO) throws Exception {
 		try {
 			return objectMapper.writeValueAsString(urlCheckerResponseDTO);
 		} catch (Exception e) {
-			log.error("Error converting object to string json. Object: [{}]", urlCheckerResponseDTO, e);
+			log.error("Error converting object to string json. Object: [{}]. Aborting operation.", urlCheckerResponseDTO, e);
 			throw e;
 		}
 	}

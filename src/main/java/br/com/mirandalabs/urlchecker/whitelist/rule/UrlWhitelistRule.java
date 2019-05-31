@@ -16,10 +16,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "url_whitelist_rule")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@ToString
 @Builder
 public class UrlWhitelistRule implements Serializable {
 
@@ -38,11 +40,5 @@ public class UrlWhitelistRule implements Serializable {
     
     @Enumerated(EnumType.STRING)
     private RuleTypeEnum type;
-
-	@Override
-	public String toString() {
-		return "UrlWhitelistRule [id=" + id + ", client=" + client + ", isGlobal=" + isGlobal 
-				+ ", rule=" + rule + ", type=" + type + "]";
-	}
 
 }

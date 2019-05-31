@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import br.com.mirandalabs.urlchecker.whitelist.checker.url.rabbit.consumer.UrlCheckerRequestDTO;
 import br.com.mirandalabs.urlchecker.whitelist.rule.UrlWhitelistRule;
 import br.com.mirandalabs.urlchecker.whitelist.rule.UrlWhitelistRuleService;
 import br.com.mirandalabs.urlchecker.whitelist.rule.evaluator.RuleEvaluatorFactory;
@@ -28,36 +27,38 @@ public class UrlCheckerService {
 	@Autowired
 	private RuleEvaluatorFactory ruleEvaluatorFactory;
 
-	public UrlCheckerResult validateUrl(@NotNull @Valid UrlCheckerRequestDTO urlCheckerRequestDTO) {
-		List<UrlWhitelistRule> urlWhitelistRules = urlWhitelistService.findByClient(urlCheckerRequestDTO.getClient());
+	public UrlCheckerResult validateUrl(@NotNull @Valid UrlChecker urlChecker) {
+		log.info("Validating URL [{}]", urlChecker);
+		
+		List<UrlWhitelistRule> urlWhitelistRules = urlWhitelistService.findByClient(urlChecker.getClient());
 
-		log.info("Applying {} rules on [{}]", CollectionUtils.size(urlWhitelistRules), urlCheckerRequestDTO);
+		log.info("Applying {} rules on [{}]", CollectionUtils.size(urlWhitelistRules), urlChecker);
 
-		return checkUrlInWhitelist(urlWhitelistRules, urlCheckerRequestDTO);
+		return checkUrlInWhitelist(urlWhitelistRules, urlChecker);
 	}
 
-	private UrlCheckerResult checkUrlInWhitelist(List<UrlWhitelistRule> urlWhitelistRules, UrlCheckerRequestDTO urlCheckerRequest) {
+	private UrlCheckerResult checkUrlInWhitelist(List<UrlWhitelistRule> urlWhitelistRules, UrlChecker urlChecker) {
 
 		for (UrlWhitelistRule urlWhitelistRule : CollectionUtils.emptyIfNull(urlWhitelistRules)) {
 			RuleEvaluatorStrategy ruleEvaluatorStrategy = ruleEvaluatorFactory.getInstance(urlWhitelistRule.getType());
 			
-			if (ruleEvaluatorStrategy.match(urlCheckerRequest.getUrl(), urlWhitelistRule)) {
+			if (ruleEvaluatorStrategy.match(urlChecker.getUrl(), urlWhitelistRule)) {
 
-				log.info("URL matches a rule. [{}] [{}]", urlWhitelistRules, urlCheckerRequest);
+				log.info("URL matches a rule. Returning result. [{}] [{}]", urlWhitelistRules, urlChecker);
 
 				return UrlCheckerResult.builder()
 											.match(true)
 											.rule(urlWhitelistRule)
-											.correlationId(urlCheckerRequest.getCorrelationId()).build();
+											.correlationId(urlChecker.getCorrelationId()).build();
 			}
 		}
 		
-		log.info("URL doesn't match any rule [{}]", urlCheckerRequest);
+		log.info("URL doesn't match any rule [{}]. Returning result...", urlChecker);
 
 		return UrlCheckerResult.builder()
 									.match(false)
 									.rule(null)
-									.correlationId(urlCheckerRequest.getCorrelationId())
+									.correlationId(urlChecker.getCorrelationId())
 									.build();
 	}
 

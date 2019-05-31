@@ -13,8 +13,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@ToString
 @Builder
 public class RegexWhitelistRuleRequestDTO implements Serializable {
 
@@ -30,10 +32,5 @@ public class RegexWhitelistRuleRequestDTO implements Serializable {
     @JsonIgnore
     @Builder.Default
     private RuleTypeEnum type = RuleTypeEnum.REGULAR_EXPRESSION;
-
-	@Override
-	public String toString() {
-		return "RegularExpressionWhitelistDTO [client=" + client + ", rule=" + rule + ", type=" + type + "]";
-	}
 
 }

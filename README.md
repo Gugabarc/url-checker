@@ -55,7 +55,7 @@ O código desenvolvido adota os design patterns Factory e Strategy, utilizando S
 
 Para a organização de pacotes decidiu-se neste não utilizar o tradicional modelo em camadas (model, service, etc.), e sim o modelo orientado a domínio, ou seja, as classes relacionadas ao mesmo domínio estão agrupadas sob a mesma hierarquia.
 
-A parte de logs recebeu um cuidado especial, buscando sempre manter um tracking claro de cada etapa de execução de cada processo da aplicação. Para tal, também está sendo impresso a thread, permitindo identificar todos os logs pertencentes ao mesmo processo. Futuramente pretende-se adotar o uso de Mapped Diagnostic Context (MDC) para que este tracking seja possível por meio de um hash gerado em um interceptor.
+A parte de logs recebeu um cuidado especial, buscando sempre manter um tracking claro de cada etapa de execução de cada processo da aplicação. Futuramente pretende-se adotar o uso de Mapped Diagnostic Context (MDC) para que este tracking seja possível por meio de um hash gerado em um interceptor a cada consumo de uma mensagem.
 
 Quanto ao tratamento de exceções, buscou-se isolar o código ao máximo, permitindo um log, e eventualmente algum tratamento mais adequado, para cada etapa do processo. Exemplo: conversão de um objeto em JSON, isolado em um método com tratamento específico de try/catch e log apropriado em caso de erro, informando o motivo, os inputs, e o que será feito na sequencia (processo será abortado? pulado? etc.)
 

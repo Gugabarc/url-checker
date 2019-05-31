@@ -6,8 +6,10 @@ import org.springframework.stereotype.Component;
 
 import br.com.mirandalabs.urlchecker.whitelist.rule.RuleTypeEnum;
 import br.com.mirandalabs.urlchecker.whitelist.rule.UrlWhitelistRule;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class RegexRuleValidatorStrategy implements RuleValidatorStrategy{
 
 	@Override
@@ -16,6 +18,7 @@ public class RegexRuleValidatorStrategy implements RuleValidatorStrategy{
 			Pattern.compile(urlWhitelistRule.getRule()).pattern();
 			return true;
 		} catch (Exception e) {
+			log.warn("Error when trying to compile expression language [{}]", urlWhitelistRule);
 			return false;
 		}
 	}
