@@ -2,7 +2,20 @@
 
 Foi desenvolvido um microsserviço de validação de ameaças em potencial, com o objetivo de descartar URLs legítimas utilizando uma whitelist de regras. A whitelist é formada por regras aplicáveis a clientes específicos e por regras globais, aplicáveis a todos os clientes. O microsserviço foi desenvolvido em Java e tem integração com o message broker RabbitMQ e com o banco de dados MySQL. Os três componentes (microsserviço, RabbitMQ e MySQL) são executados em containers Docker.
 
-O código desenvolvido adota os design patterns Factory e Strategy para possibilitar o desenvolvimento de diversos tipos de regras, podendo customizar suas validações (quando inseridas) e sua execução (quando a URL é validada). Inicialmente a aplicação suporta apenas expressões regulares, utilizando a síntaxe nativa do Java. Para tal, existem duas operações, uma de inserçao de uma expressão regular, e outra para aplicação de regras em uma URL, mais detalhadas logo abaixo.
+Os principais frameworks utilizados foram:
+1) Spring Boot: para setup inicial da aplicação e das bibliotecas necessárias;
+2) Lombok: para a geração de código, como getters, setters, logs e do design pattern builder. A anotação @ToString foi evitada por enquanto, devido a possíveis nullpointers que possam surgir no código gerado. No contexto atual isto não ocorreria, mas optou-se por desde já implementar os toStrings;
+3) Model Mapper: a ideia aqui foi evitar acoplamento entre os contratos de mensageria definidos no rabbit, e a camuda de serviço da aplicação. Desta forma, foram criados beans específicios de request e response para cada fila, convertendo-os utilizando este framework para objetos conhecidos da camada de serviço. Assim evitando possíveis quebras de contrato acidentais;
+4) Jackson: as annotations @JsonProperty foram utilizadas de forma a evitar que possívei refatoração (troca de nome de variáveis dos beans de contrato) quebrem o contrato definidos na camada de mensageria;
+5) Bean Validation: Para a validação de campos obrigatórios utilizou-se as anotações da específicação Bean Validation, utilizando o contexto do Spring para sua execução;
+6) Spring Data: para persistência e consulta aos dados no BD;
+7) Apache Commons: foram utilizadas as bibliotecas lang 3 e collection 4 para métodos utilitários de verificações relacionadas a strings e listas;
+8) Spring: principalmente para injeção de dependência na camada de serviço;
+9) JUnit e Mockito: para os testes.
+
+O código desenvolvido adota os design patterns Factory e Strategy, utilizando Spring, para possibilitar o desenvolvimento de diversos tipos de regras, podendo customizar suas validações (quando inseridas) e sua execução (quando a URL é validada). Inicialmente a aplicação suporta apenas expressões regulares, utilizando a síntaxe nativa do Java. Para tal, existem duas operações, uma de inserçao de uma expressão regular, e outra para aplicação de regras em uma URL, mais detalhadas logo abaixo. Também criou-se uma interface chamada CrudTemplateService para definir as assinaturas e validações relacionadas as classes de serviço persistentes (que salvam dados no BD).
+
+Para a organização de pacotes decidiu-se neste não utilizar o tradicional modelo em camadas (model, service, etc.), e sim o modelo orientado a domínio, ou seja, as classes relacionadas ao mesmo domínio estão agrupadas sob a mesma hierarquia.
 
 ## Operações
 ### 1. Inserção de expressão regular na whitelist
